@@ -1,0 +1,459 @@
+{
+  "project": {
+    "title": "Ridge Regression Based Model for Predicting Crop Yield",
+    "short_title": "AgriRidge AI",
+    "subtitle": "Unit II PBL Project \u2014 Comparative Evaluation of Regularized Regression Algorithms",
+    "department": "Department of Computer Science & Engineering (AI/ML)",
+    "institution": "SRM Institute of Science and Technology",
+    "dataset_name": "Crop Yield Prediction using Soil and Weather Variables",
+    "dataset_source": "Kaggle (gurudathg/crop-yield-prediction-using-soil-and-weather)",
+    "samples_count": 2596,
+    "features_count": 5,
+    "target_variable": "yield (tons/hectare)",
+    "train_split": "80% (2,076 samples)",
+    "test_split": "20% (520 samples)"
+  },
+  "model_stats": {
+    "intercept": 8.533832,
+    "best_alpha": 1.526418,
+    "cv_folds": 5,
+    "cv_metric": "R\u00b2 Score"
+  },
+  "features": [
+    {
+      "name": "Fertilizer",
+      "label": "Fertilizer Quantity",
+      "unit": "kg/ha",
+      "mean": 66.487433,
+      "std": 9.747669,
+      "min": 49.75,
+      "max": 80.22,
+      "q25": 59.87,
+      "q50": 65.01,
+      "q75": 76.94,
+      "ols_coef": -0.537947,
+      "ridge_coef": -0.531745,
+      "lasso_coef": -0.402485,
+      "description": "Total chemical/organic fertilizer applied per hectare"
+    },
+    {
+      "name": "temp",
+      "label": "Ambient Temperature",
+      "unit": "\u00b0C",
+      "mean": 33.848237,
+      "std": 5.371279,
+      "min": 23.77,
+      "max": 40.27,
+      "q25": 28.0,
+      "q50": 36.97,
+      "q75": 38.93,
+      "ols_coef": -0.69075,
+      "ridge_coef": -0.688737,
+      "lasso_coef": -0.648248,
+      "description": "Mean ambient daytime crop canopy temperature"
+    },
+    {
+      "name": "N",
+      "label": "Soil Nitrogen (N)",
+      "unit": "mg/kg",
+      "mean": 69.5229,
+      "std": 6.802806,
+      "min": 58.84,
+      "max": 80.22,
+      "q25": 64.83,
+      "q50": 69.89,
+      "q75": 76.85,
+      "ols_coef": 0.83285,
+      "ridge_coef": 0.828513,
+      "lasso_coef": 0.758932,
+      "description": "Available soil nitrogen content for vegetative development"
+    },
+    {
+      "name": "P",
+      "label": "Soil Phosphorus (P)",
+      "unit": "mg/kg",
+      "mean": 20.708194,
+      "std": 1.973419,
+      "min": 17.72,
+      "max": 25.16,
+      "q25": 18.99,
+      "q50": 20.89,
+      "q75": 22.13,
+      "ols_coef": 0.422866,
+      "ridge_coef": 0.421919,
+      "lasso_coef": 0.387945,
+      "description": "Available soil phosphorus for root growth & energy transfer"
+    },
+    {
+      "name": "K",
+      "label": "Soil Potassium (K)",
+      "unit": "mg/kg",
+      "mean": 17.806268,
+      "std": 1.940037,
+      "min": 14.7,
+      "max": 22.06,
+      "q25": 15.98,
+      "q50": 18.06,
+      "q75": 19.13,
+      "ols_coef": 0.503753,
+      "ridge_coef": 0.504554,
+      "lasso_coef": 0.512449,
+      "description": "Available soil potassium for disease resistance & water regulation"
+    }
+  ],
+  "target_stats": {
+    "name": "yield",
+    "unit": "tons/hectare",
+    "mean": 8.533832,
+    "std": 1.938789,
+    "min": 5.150745,
+    "max": 12.337651,
+    "q25": 6.929404,
+    "q50": 8.50172,
+    "q75": 10.045179
+  },
+  "model_benchmark": [
+    {
+      "model": "Lasso Regression (L1)",
+      "r2": 0.863699,
+      "rmse": 0.715722,
+      "mae": 0.582286,
+      "alpha": 0.01,
+      "regularization": "L1 norm (|w|)",
+      "sparsity": "Feature selection penalty",
+      "tag": "Alternative Regularizer"
+    },
+    {
+      "model": "ElasticNet (L1 + L2)",
+      "r2": 0.863623,
+      "rmse": 0.715921,
+      "mae": 0.582076,
+      "alpha": 0.01,
+      "regularization": "0.5 L1 + 0.5 L2",
+      "sparsity": "Blended shrinkage",
+      "tag": "Hybrid Regularizer"
+    },
+    {
+      "model": "Ridge Regression (L2) \u2605",
+      "r2": 0.862736,
+      "rmse": 0.718245,
+      "mae": 0.579318,
+      "alpha": 1.526418,
+      "regularization": "L2 norm (||w||\u00b2)",
+      "sparsity": "Smooth shrinkage (keeps all predictors)",
+      "tag": "Selected Primary Model"
+    },
+    {
+      "model": "Linear Regression (OLS)",
+      "r2": 0.862648,
+      "rmse": 0.718474,
+      "mae": 0.579096,
+      "alpha": 0.0,
+      "regularization": "None (OLS baseline)",
+      "sparsity": "Prone to multicollinearity",
+      "tag": "Unregularized Baseline"
+    }
+  ],
+  "correlations": {
+    "labels": [
+      "Fertilizer",
+      "temp",
+      "N",
+      "P",
+      "K",
+      "yield"
+    ],
+    "matrix": [
+      [
+        1.0,
+        -0.12,
+        0.45,
+        0.38,
+        0.41,
+        0.34
+      ],
+      [
+        -0.12,
+        1.0,
+        -0.22,
+        -0.19,
+        -0.25,
+        -0.48
+      ],
+      [
+        0.45,
+        -0.22,
+        1.0,
+        0.78,
+        0.72,
+        0.76
+      ],
+      [
+        0.38,
+        -0.19,
+        0.78,
+        1.0,
+        0.69,
+        0.68
+      ],
+      [
+        0.41,
+        -0.25,
+        0.72,
+        0.69,
+        1.0,
+        0.71
+      ],
+      [
+        0.34,
+        -0.48,
+        0.76,
+        0.68,
+        0.71,
+        1.0
+      ]
+    ]
+  },
+  "sample_records": [
+    {
+      "id": "OBS-001",
+      "fertilizer": 80.0,
+      "temperature": 28.0,
+      "nitrogen": 80.0,
+      "phosphorus": 24.0,
+      "potassium": 20.0,
+      "actual_yield": 12.0,
+      "predicted_yield": 11.1,
+      "residual": 0.9,
+      "abs_error": 0.9
+    },
+    {
+      "id": "OBS-002",
+      "fertilizer": 77.0,
+      "temperature": 27.0,
+      "nitrogen": 78.0,
+      "phosphorus": 23.0,
+      "potassium": 20.0,
+      "actual_yield": 12.0,
+      "predicted_yield": 10.93,
+      "residual": 1.07,
+      "abs_error": 1.07
+    },
+    {
+      "id": "OBS-003",
+      "fertilizer": 80.0,
+      "temperature": 26.0,
+      "nitrogen": 80.0,
+      "phosphorus": 24.0,
+      "potassium": 20.0,
+      "actual_yield": 12.0,
+      "predicted_yield": 11.35,
+      "residual": 0.65,
+      "abs_error": 0.65
+    },
+    {
+      "id": "OBS-004",
+      "fertilizer": 80.0,
+      "temperature": 28.0,
+      "nitrogen": 80.0,
+      "phosphorus": 24.0,
+      "potassium": 20.0,
+      "actual_yield": 12.0,
+      "predicted_yield": 11.1,
+      "residual": 0.9,
+      "abs_error": 0.9
+    },
+    {
+      "id": "OBS-005",
+      "fertilizer": 78.0,
+      "temperature": 27.0,
+      "nitrogen": 78.0,
+      "phosphorus": 23.0,
+      "potassium": 19.0,
+      "actual_yield": 12.0,
+      "predicted_yield": 10.62,
+      "residual": 1.38,
+      "abs_error": 1.38
+    },
+    {
+      "id": "OBS-006",
+      "fertilizer": 65.0,
+      "temperature": 34.0,
+      "nitrogen": 70.0,
+      "phosphorus": 21.0,
+      "potassium": 18.0,
+      "actual_yield": 8.52,
+      "predicted_yield": 8.77,
+      "residual": -0.25,
+      "abs_error": 0.25
+    },
+    {
+      "id": "OBS-007",
+      "fertilizer": 60.0,
+      "temperature": 36.5,
+      "nitrogen": 65.0,
+      "phosphorus": 19.5,
+      "potassium": 16.5,
+      "actual_yield": 7.45,
+      "predicted_yield": 7.4,
+      "residual": 0.05,
+      "abs_error": 0.05
+    },
+    {
+      "id": "OBS-008",
+      "fertilizer": 75.0,
+      "temperature": 30.0,
+      "nitrogen": 75.0,
+      "phosphorus": 22.5,
+      "potassium": 19.0,
+      "actual_yield": 10.15,
+      "predicted_yield": 9.92,
+      "residual": 0.23,
+      "abs_error": 0.23
+    },
+    {
+      "id": "OBS-009",
+      "fertilizer": 52.0,
+      "temperature": 38.0,
+      "nitrogen": 60.0,
+      "phosphorus": 18.0,
+      "potassium": 15.0,
+      "actual_yield": 5.8,
+      "predicted_yield": 6.32,
+      "residual": -0.52,
+      "abs_error": 0.52
+    },
+    {
+      "id": "OBS-010",
+      "fertilizer": 70.0,
+      "temperature": 32.0,
+      "nitrogen": 72.0,
+      "phosphorus": 21.5,
+      "potassium": 18.5,
+      "actual_yield": 9.1,
+      "predicted_yield": 9.23,
+      "residual": -0.13,
+      "abs_error": 0.13
+    },
+    {
+      "id": "OBS-011",
+      "fertilizer": 55.0,
+      "temperature": 39.5,
+      "nitrogen": 62.0,
+      "phosphorus": 18.5,
+      "potassium": 15.5,
+      "actual_yield": 5.4,
+      "predicted_yield": 6.45,
+      "residual": -1.05,
+      "abs_error": 1.05
+    },
+    {
+      "id": "OBS-012",
+      "fertilizer": 79.0,
+      "temperature": 25.5,
+      "nitrogen": 79.5,
+      "phosphorus": 24.5,
+      "potassium": 21.0,
+      "actual_yield": 12.25,
+      "predicted_yield": 11.78,
+      "residual": 0.47,
+      "abs_error": 0.47
+    },
+    {
+      "id": "OBS-013",
+      "fertilizer": 68.0,
+      "temperature": 33.0,
+      "nitrogen": 69.0,
+      "phosphorus": 20.0,
+      "potassium": 17.5,
+      "actual_yield": 8.4,
+      "predicted_yield": 8.27,
+      "residual": 0.13,
+      "abs_error": 0.13
+    },
+    {
+      "id": "OBS-014",
+      "fertilizer": 62.0,
+      "temperature": 35.0,
+      "nitrogen": 66.0,
+      "phosphorus": 19.0,
+      "potassium": 16.0,
+      "actual_yield": 7.15,
+      "predicted_yield": 7.37,
+      "residual": -0.22,
+      "abs_error": 0.22
+    },
+    {
+      "id": "OBS-015",
+      "fertilizer": 73.0,
+      "temperature": 29.0,
+      "nitrogen": 74.0,
+      "phosphorus": 22.0,
+      "potassium": 18.8,
+      "actual_yield": 9.85,
+      "predicted_yield": 9.88,
+      "residual": -0.03,
+      "abs_error": 0.03
+    },
+    {
+      "id": "OBS-016",
+      "fertilizer": 50.5,
+      "temperature": 40.0,
+      "nitrogen": 59.0,
+      "phosphorus": 17.8,
+      "potassium": 14.8,
+      "actual_yield": 5.2,
+      "predicted_yield": 5.93,
+      "residual": -0.73,
+      "abs_error": 0.73
+    },
+    {
+      "id": "OBS-017",
+      "fertilizer": 76.0,
+      "temperature": 31.0,
+      "nitrogen": 76.5,
+      "phosphorus": 23.0,
+      "potassium": 19.5,
+      "actual_yield": 10.6,
+      "predicted_yield": 10.16,
+      "residual": 0.44,
+      "abs_error": 0.44
+    },
+    {
+      "id": "OBS-018",
+      "fertilizer": 64.0,
+      "temperature": 37.0,
+      "nitrogen": 67.5,
+      "phosphorus": 20.2,
+      "potassium": 17.2,
+      "actual_yield": 7.8,
+      "predicted_yield": 7.75,
+      "residual": 0.05,
+      "abs_error": 0.05
+    },
+    {
+      "id": "OBS-019",
+      "fertilizer": 71.5,
+      "temperature": 28.5,
+      "nitrogen": 73.0,
+      "phosphorus": 21.8,
+      "potassium": 18.2,
+      "actual_yield": 9.6,
+      "predicted_yield": 9.71,
+      "residual": -0.11,
+      "abs_error": 0.11
+    },
+    {
+      "id": "OBS-020",
+      "fertilizer": 58.0,
+      "temperature": 36.0,
+      "nitrogen": 63.5,
+      "phosphorus": 18.7,
+      "potassium": 15.8,
+      "actual_yield": 6.75,
+      "predicted_yield": 7.04,
+      "residual": -0.29,
+      "abs_error": 0.29
+    }
+  ]
+}

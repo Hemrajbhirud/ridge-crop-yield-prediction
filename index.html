@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Yield Prediction using Ridge Regression — ML Project Showcase</title>
+  <meta name="description" content="Machine Learning Unit II Project: Ridge Regression based Crop Yield Prediction using Soil and Weather Variables, SRM IST CSE (AI/ML)">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- ========================================================================
+       Top Navigation Bar
+       ======================================================================== -->
+  <nav class="site-nav">
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="#overview" class="nav-brand">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+          <span>CropYield<span style="color: var(--accent-green-text)">.ml</span></span>
+        </a>
+        <span class="nav-brand-badge">Ridge L2</span>
+
+        <div class="nav-links">
+          <a href="#overview" class="nav-link">Overview</a>
+          <a href="#simulator" class="nav-link">Yield Simulator</a>
+          <a href="#methodology" class="nav-link">Methodology</a>
+          <a href="#benchmarks" class="nav-link">Benchmarks</a>
+          <a href="#figures" class="nav-link">Figures</a>
+          <a href="#dataset" class="nav-link">Test Data</a>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <span class="nav-tag">SRM IST • CSE (AI/ML)</span>
+        <button class="btn-icon" id="btn-theme" title="Toggle Theme" aria-label="Toggle Theme">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================
+       Main Content Container
+       ======================================================================== -->
+  <main class="container">
+
+    <!-- Hero Header -->
+    <header class="project-hero" id="overview">
+      <div class="project-breadcrumbs">
+        <span>Projects</span>
+        <span>/</span>
+        <span>Machine Learning Unit II</span>
+        <span>/</span>
+        <span style="color: var(--text-primary)">Ridge Crop Yield</span>
+      </div>
+
+      <h1 class="project-title">Crop Yield Prediction using Regularized Ridge Regression</h1>
+      
+      <p class="project-subtitle">
+        Predicting agricultural crop yield (tons/hectare) from soil macronutrients (Nitrogen, Phosphorus, Potassium), gross fertilizer, and ambient temperature. Implemented L2 weight shrinkage to resolve predictor multicollinearity, benchmarked against Ordinary Least Squares, Lasso, and ElasticNet.
+      </p>
+
+      <div class="project-meta-pills">
+        <span class="pill pill-green">
+          <strong>Primary Model:</strong> Ridge Regression (α = 1.526)
+        </span>
+        <span class="pill pill-blue">
+          <strong>Test R²:</strong> 0.8627
+        </span>
+        <span class="pill">
+          <strong>Test RMSE:</strong> 0.7182 t/ha
+        </span>
+        <span class="pill">
+          <strong>Dataset:</strong> Kaggle Soil & Weather (2,596 rows)
+        </span>
+        <span class="pill">
+          <strong>Validation:</strong> 5-Fold Cross Validation
+        </span>
+      </div>
+    </header>
+
+    <!-- Top Key Metrics Strip -->
+    <section class="metrics-strip">
+      <div class="metric-cell">
+        <span class="metric-label">Model Fit (R²)</span>
+        <span class="metric-num">0.8627</span>
+        <span class="metric-desc">86.3% of yield variance explained</span>
+      </div>
+      <div class="metric-cell">
+        <span class="metric-label">Root Mean Sq. Error</span>
+        <span class="metric-num">0.7182</span>
+        <span class="metric-desc">Tons / hectare on unseen test set</span>
+      </div>
+      <div class="metric-cell">
+        <span class="metric-label">Mean Absolute Error</span>
+        <span class="metric-num">0.5793</span>
+        <span class="metric-desc">Average absolute prediction deviation</span>
+      </div>
+      <div class="metric-cell">
+        <span class="metric-label">Regularization (α)</span>
+        <span class="metric-num">1.5264</span>
+        <span class="metric-desc">Optimal penalty found via 5-Fold CV</span>
+      </div>
+      <div class="metric-cell">
+        <span class="metric-label">Total Observations</span>
+        <span class="metric-num">2,596</span>
+        <span class="metric-desc">80% Train (2076) • 20% Test (520)</span>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         1. Interactive Field Predictor Tool
+         ====================================================================== -->
+    <section id="simulator">
+      <div class="section-heading">
+        <div class="section-eyebrow">Interactive Simulator</div>
+        <h2 class="section-title">Field Yield Estimation Calculator</h2>
+        <p class="section-desc">Adjust soil nutrient levels and temperature to simulate real-time Ridge model predictions and observe parameter contributions.</p>
+      </div>
+
+      <div class="tool-grid">
+        
+        <!-- Left: Input Controls -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Soil Chemistry & Weather Inputs</h3>
+            <span style="font-size: 0.75rem; color: var(--text-tertiary); font-family: var(--font-mono)">Model Input Vector X</span>
+          </div>
+
+          <!-- Nitrogen (N) -->
+          <div class="input-row">
+            <div class="input-label-bar">
+              <span class="input-name">Soil Nitrogen (N) <span class="input-unit">[mg/kg]</span></span>
+              <div class="input-value-box">
+                <span class="num-display" id="val-n">69.5</span>
+              </div>
+            </div>
+            <input type="range" class="range-slider" id="in-n" min="58.5" max="80.5" step="0.5" value="69.5">
+            <div class="range-ticks">
+              <span>58.8 (Min)</span>
+              <span>69.5 (Mean)</span>
+              <span>80.2 (Max)</span>
+            </div>
+          </div>
+
+          <!-- Phosphorus (P) -->
+          <div class="input-row">
+            <div class="input-label-bar">
+              <span class="input-name">Soil Phosphorus (P) <span class="input-unit">[mg/kg]</span></span>
+              <div class="input-value-box">
+                <span class="num-display" id="val-p">20.7</span>
+              </div>
+            </div>
+            <input type="range" class="range-slider" id="in-p" min="17.5" max="25.5" step="0.2" value="20.7">
+            <div class="range-ticks">
+              <span>17.7 (Min)</span>
+              <span>20.7 (Mean)</span>
+              <span>25.2 (Max)</span>
+            </div>
+          </div>
+
+          <!-- Potassium (K) -->
+          <div class="input-row">
+            <div class="input-label-bar">
+              <span class="input-name">Soil Potassium (K) <span class="input-unit">[mg/kg]</span></span>
+              <div class="input-value-box">
+                <span class="num-display" id="val-k">17.8</span>
+              </div>
+            </div>
+            <input type="range" class="range-slider" id="in-k" min="14.5" max="22.5" step="0.2" value="17.8">
+            <div class="range-ticks">
+              <span>14.7 (Min)</span>
+              <span>17.8 (Mean)</span>
+              <span>22.1 (Max)</span>
+            </div>
+          </div>
+
+          <!-- Fertilizer -->
+          <div class="input-row">
+            <div class="input-label-bar">
+              <span class="input-name">Fertilizer Application <span class="input-unit">[kg/ha]</span></span>
+              <div class="input-value-box">
+                <span class="num-display" id="val-fert">66.5</span>
+              </div>
+            </div>
+            <input type="range" class="range-slider" id="in-fert" min="49.5" max="80.5" step="0.5" value="66.5">
+            <div class="range-ticks">
+              <span>49.8 (Min)</span>
+              <span>66.5 (Mean)</span>
+              <span>80.2 (Max)</span>
+            </div>
+          </div>
+
+          <!-- Temperature -->
+          <div class="input-row">
+            <div class="input-label-bar">
+              <span class="input-name">Ambient Temperature <span class="input-unit">[°C]</span></span>
+              <div class="input-value-box">
+                <span class="num-display" id="val-temp">33.8</span>
+              </div>
+            </div>
+            <input type="range" class="range-slider" id="in-temp" min="23.5" max="40.5" step="0.5" value="33.8">
+            <div class="range-ticks">
+              <span>23.8°C (Min)</span>
+              <span>33.8°C (Mean)</span>
+              <span>40.3°C (Max)</span>
+            </div>
+          </div>
+
+          <!-- Scenario Presets -->
+          <div class="presets-group">
+            <div class="presets-label">Field Scenario Presets</div>
+            <div class="presets-buttons">
+              <button class="btn-preset active" data-preset="mean">Historical Mean</button>
+              <button class="btn-preset" data-preset="optimal">Optimal Soil Balance</button>
+              <button class="btn-preset" data-preset="heat">Thermal Heat Stress</button>
+              <button class="btn-preset" data-preset="excess">Fertilizer Overuse</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Prediction Output & Breakdown -->
+        <div class="card output-card">
+          <div>
+            <div class="card-header">
+              <h3 class="card-title">Predicted Crop Yield</h3>
+              <span style="font-size: 0.75rem; color: var(--text-tertiary); font-family: var(--font-mono)">Standardized Model Output</span>
+            </div>
+
+            <div class="yield-hero-box">
+              <div class="yield-hero-title">Estimated Yield Output</div>
+              <div class="yield-hero-value" id="out-yield-val">8.53</div>
+              <div class="yield-hero-unit">tons / hectare (± 0.72 t/ha RMSE)</div>
+              <div>
+                <span class="yield-status-tag tag-average" id="yield-status">Average Regional Yield</span>
+              </div>
+            </div>
+
+            <!-- Feature Contribution Waterfall -->
+            <div style="margin-bottom: 0.75rem;">
+              <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 0.5rem;">
+                Individual Feature Shifts (relative to baseline 8.53 t/ha)
+              </div>
+              <div class="contributions-list">
+                <div class="contrib-item">
+                  <span class="contrib-name">Soil Nitrogen (N) [w = +0.83]</span>
+                  <span class="contrib-val" id="c-n">0.00 t/ha</span>
+                </div>
+                <div class="contrib-item">
+                  <span class="contrib-name">Soil Potassium (K) [w = +0.50]</span>
+                  <span class="contrib-val" id="c-k">0.00 t/ha</span>
+                </div>
+                <div class="contrib-item">
+                  <span class="contrib-name">Soil Phosphorus (P) [w = +0.42]</span>
+                  <span class="contrib-val" id="c-p">0.00 t/ha</span>
+                </div>
+                <div class="contrib-item">
+                  <span class="contrib-name">Fertilizer Quantity [w = -0.53]</span>
+                  <span class="contrib-val" id="c-fert">0.00 t/ha</span>
+                </div>
+                <div class="contrib-item">
+                  <span class="contrib-name">Temperature [w = -0.69]</span>
+                  <span class="contrib-val" id="c-temp">0.00 t/ha</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Practical Advisory Note -->
+          <div class="advisory-box">
+            <div class="advisory-title">Agronomic Advisory Feed</div>
+            <div id="advisory-content">Soil nutrient balances and climate conditions are close to baseline test means.</div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         2. Methodology & Formulation
+         ====================================================================== -->
+    <section class="math-card" id="methodology">
+      <div class="section-heading" style="margin-bottom: 0.75rem;">
+        <div class="section-eyebrow">Methodology</div>
+        <h2 class="section-title">The Ridge Formulation & Multicollinearity Mitigation</h2>
+      </div>
+
+      <p style="font-size: 0.9rem; color: var(--text-secondary); max-width: 900px; line-height: 1.6;">
+        Soil macronutrients (Nitrogen, Phosphorus, and Potassium) naturally exhibit strong linear dependencies in real-world agricultural datasets (inter-correlation coefficients range between <code>r = 0.69</code> and <code>r = 0.78</code>). When features are collinear, standard Ordinary Least Squares (OLS) normal equations <code>(XᵀX)⁻¹</code> become ill-conditioned, yielding inflated coefficient variance and erratic predictions.
+      </p>
+
+      <div class="math-grid">
+        <div class="math-block">
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary)">Ridge Loss Objective</div>
+          <code class="math-formula">min_w ||y - Xw||²₂ + α ||w||²₂</code>
+          <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45;">
+            Adds an L2 penalty on the sum of squared weights, shrinking coefficients towards zero and reducing generalization error.
+          </p>
+        </div>
+
+        <div class="math-block">
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary)">Closed-Form Analytical Solution</div>
+          <code class="math-formula">ŵ_ridge = (XᵀX + α·I)⁻¹ Xᵀy</code>
+          <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45;">
+            Adding α·I shifts eigenvalues away from zero, making matrix inversion numerically stable even under extreme collinearity.
+          </p>
+        </div>
+
+        <div class="math-block">
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary)">Feature Scaling with StandardScaler</div>
+          <code class="math-formula">z_i = (x_i - μ_i) / σ_i</code>
+          <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45;">
+            Because the L2 penalty is isotropic, unscaled features with larger ranges would receive unfairly low shrinkage penalties.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         3. Benchmarks & Feature Coefficients
+         ====================================================================== -->
+    <section class="two-col-grid" id="benchmarks">
+      
+      <!-- Benchmarks Table & Chart -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Comparative Algorithm Evaluation</h3>
+          <span style="font-size: 0.75rem; color: var(--text-tertiary); font-family: var(--font-mono)">Test Partition (n=520)</span>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Test R²</th>
+                <th>RMSE (t/ha)</th>
+                <th>MAE (t/ha)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="active-row">
+                <td><strong>Ridge Regression (L2) ★</strong></td>
+                <td class="mono">0.8627</td>
+                <td class="mono">0.7182</td>
+                <td class="mono">0.5793</td>
+              </tr>
+              <tr>
+                <td>Lasso Regression (L1)</td>
+                <td class="mono">0.8637</td>
+                <td class="mono">0.7157</td>
+                <td class="mono">0.5823</td>
+              </tr>
+              <tr>
+                <td>ElasticNet (L1 + L2)</td>
+                <td class="mono">0.8636</td>
+                <td class="mono">0.7159</td>
+                <td class="mono">0.5821</td>
+              </tr>
+              <tr>
+                <td>Linear Regression (OLS)</td>
+                <td class="mono">0.8626</td>
+                <td class="mono">0.7185</td>
+                <td class="mono">0.5791</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="height: 220px; position: relative;">
+          <canvas id="chart-benchmark"></canvas>
+        </div>
+        
+        <p style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.75rem; line-height: 1.4;">
+          <strong>Why select Ridge over Lasso?</strong> While Lasso achieves a marginally comparable R² (0.8637), its L1 norm penalty drives coefficients to zero. In agronomic field management, all soil nutrients are essential for crop biology; Ridge preserves every predictor while stabilizing collinear variance.
+        </p>
+      </div>
+
+      <!-- Feature Coefficients Table & Chart -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Standardized Feature Coefficients</h3>
+          <span style="font-size: 0.75rem; color: var(--text-tertiary); font-family: var(--font-mono)">Ridge vs Linear OLS</span>
+        </div>
+
+        <div style="height: 250px; position: relative; margin-bottom: 1rem;">
+          <canvas id="chart-coefficients"></canvas>
+        </div>
+
+        <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+          <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem;">Key Agronomic Findings:</div>
+          <ul style="padding-left: 1.25rem; margin-top: 0.35rem;">
+            <li><strong>Nitrogen (+0.83):</strong> The dominant positive contributor to overall biomass and grain development.</li>
+            <li><strong>Potassium (+0.50) & Phosphorus (+0.42):</strong> Vital positive co-factors supporting osmotic regulation and root development.</li>
+            <li><strong>Temperature (-0.69):</strong> Severe negative driver, reflecting significant thermal heat stress above 35°C.</li>
+            <li><strong>Fertilizer (-0.53):</strong> Shows a negative net weight when active NPK levels are held constant, reflecting chemical fertilizer overdose.</li>
+          </ul>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================
+         4. Notebook Validation Figures
+         ====================================================================== -->
+    <section id="figures">
+      <div class="section-heading">
+        <div class="section-eyebrow">Experimental Evidence</div>
+        <h2 class="section-title">Notebook Figures & Validation Artifacts</h2>
+        <p class="section-desc">Diagnostic plots directly exported from <code>Ridge_Regression_Crop_Yieldd.ipynb</code> during the experimental training run.</p>
+      </div>
+
+      <div class="gallery-grid">
+        
+        <!-- Figure 1 -->
+        <div class="figure-card">
+          <div class="figure-img-box">
+            <img src="assets/plots/correlation_matrix.png" alt="Feature Correlation Matrix" loading="lazy">
+          </div>
+          <div class="figure-info">
+            <div class="figure-name">1. Correlation Matrix Heatmap</div>
+            <div class="figure-caption">Demonstrates high collinearity between N, P, and K (r > 0.70), justifying Ridge L2 regularization over OLS.</div>
+          </div>
+        </div>
+
+        <!-- Figure 2 -->
+        <div class="figure-card">
+          <div class="figure-img-box">
+            <img src="assets/plots/alpha_tuning_curve.png" alt="Alpha vs CV R2" loading="lazy">
+          </div>
+          <div class="figure-info">
+            <div class="figure-name">2. Hyperparameter Alpha Tuning</div>
+            <div class="figure-caption">5-Fold cross-validation curve over 50 log-spaced alphas identifying the peak generalization score at α = 1.526.</div>
+          </div>
+        </div>
+
+        <!-- Figure 3 -->
+        <div class="figure-card">
+          <div class="figure-img-box">
+            <img src="assets/plots/residuals_and_actual_vs_predicted.png" alt="Residuals and Predictions" loading="lazy">
+          </div>
+          <div class="figure-info">
+            <div class="figure-name">3. Residual Plot & Identity Fit</div>
+            <div class="figure-caption">Evenly scattered residuals around zero with test predictions closely tracking the 45-degree actual yield line.</div>
+          </div>
+        </div>
+
+        <!-- Figure 4 -->
+        <div class="figure-card">
+          <div class="figure-img-box">
+            <img src="assets/plots/coefficient_comparison.png" alt="Coefficient Comparison" loading="lazy">
+          </div>
+          <div class="figure-info">
+            <div class="figure-name">4. Model Weights Comparison</div>
+            <div class="figure-caption">Comparison of estimated weights across OLS, Ridge, and Lasso, highlighting L2 shrinkage behavior.</div>
+          </div>
+        </div>
+
+        <!-- Figure 5 -->
+        <div class="figure-card">
+          <div class="figure-img-box">
+            <img src="assets/plots/feature_distributions.png" alt="Feature Distributions" loading="lazy">
+          </div>
+          <div class="figure-info">
+            <div class="figure-name">5. Feature Distribution & KDE</div>
+            <div class="figure-caption">Histogram density plots verifying continuous distributions across all 2,596 dataset records.</div>
+          </div>
+        </div>
+
+        <!-- Figure 6 -->
+        <div class="figure-card">
+          <div class="figure-img-box">
+            <img src="assets/plots/boxplots.png" alt="Boxplots" loading="lazy">
+          </div>
+          <div class="figure-info">
+            <div class="figure-name">6. Outlier & Range Boxplots</div>
+            <div class="figure-caption">Interquartile ranges and bounds verifying data hygiene and absence of pathological outliers.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         5. Dataset Test Inspector Table
+         ====================================================================== -->
+    <section class="card" style="margin-bottom: 3rem;" id="dataset">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title">Test Set Observation Inspector</h3>
+          <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.15rem;">
+            Sample test set observations comparing ground truth actual yield with Ridge model predictions and residual error.
+          </p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Observation ID</th>
+              <th>Fertilizer (kg/ha)</th>
+              <th>Temp (°C)</th>
+              <th>Nitrogen (N)</th>
+              <th>Phosphorus (P)</th>
+              <th>Potassium (K)</th>
+              <th>Actual Yield</th>
+              <th>Ridge Predicted</th>
+              <th>Residual Error</th>
+            </tr>
+          </thead>
+          <tbody id="sample-tbody">
+            <!-- Populated dynamically via app.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+
+  </main>
+
+  <!-- ========================================================================
+       Figure Lightbox Modal
+       ======================================================================== -->
+  <div class="modal-backdrop" id="figure-modal" role="dialog" aria-modal="true">
+    <div class="modal-frame">
+      <div class="modal-head">
+        <h3 id="modal-figure-title" style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary)">Figure Inspection</h3>
+        <button class="btn-icon" id="btn-close-modal" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-img-wrap">
+        <img id="modal-figure-img" src="" alt="Enlarged Plot">
+      </div>
+      <div class="modal-foot">
+        <p id="modal-figure-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       Footer
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="footer-row">
+      <div>
+        <strong>Ridge Regression Based Model for Predicting Crop Yield</strong>
+        <div style="margin-top: 0.2rem; color: var(--text-tertiary)">B.Tech CSE (AI/ML) • SRM Institute of Science and Technology • Unit II PBL</div>
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-tertiary)">
+        Python 3.12 • scikit-learn 1.6 • Kaggle Soil & Weather Dataset
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/chart.min.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
